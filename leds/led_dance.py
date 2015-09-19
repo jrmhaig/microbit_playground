@@ -1,29 +1,22 @@
-# Light LEDs at 'random' and make them fade over time
+# Light LEDs at random and make them fade over time
 #
 # Usage:
 #
-#    led_dance(speed)
+#    led_dance(delay)
 #
-# 'speed' is the time between each new LED being turned on. Note that the
-# random number is actually based on time and so the speed will determine
-# the pattern (and it is not really random).
-#
-# Hold button 'A' pressed to stop new LEDs being turned on.
+# 'delay' is the time between each new LED being turned on.
 
-import pyb
+import microbit
 
 def led_dance(delay):
-    dots = {}
-    control = pyb.Switch(1)
+    dots = [ [0]*5, [0]*5, [0]*5, [0]*5, [0]*5 ]
+    microbit.display.set_display_mode(1)
     while True:
-        if not control.value():
-            dots[pyb.millis() % 25] = 16
-        for d in dots:
-            pyb.pixel(d, dots[d])
-            if dots[d] == 0:
-                del(dots[d])
-            else:
-                dots[d] = int(dots[d]/2)
-        pyb.delay(delay)
+        dots[microbit.random(5)][microbit.random(5)] = 128
+        for i in range(5):
+            for j in range(5):
+                microbit.display.image.set_pixel_value(i, j, dots[i][j])
+                dots[i][j] = int(dots[i][j]/2)
+        microbit.sleep(delay)
 
-led_dance(101)
+led_dance(100)
