@@ -17,7 +17,6 @@ def detect_motion():
     x = microbit.accelerometer.get_x()
     while abs(x - microbit.accelerometer.get_x()) < 64:
         microbit.sleep(10)
-        pass
 
 microbit.display.set_display_mode(1)
 brightness = [ 0, 1, 3, 7, 15, 31, 63, 127, 255 ]
