@@ -13,13 +13,25 @@ def show_image(img, brightness):
         for j in range(5):
             microbit.display.image.set_pixel_value(i, j, img[j][i] * brightness)
 
-microbit.display.set_display_mode(1)
+def detect_motion():
+    x = microbit.accelerometer.get_x()
+    while abs(x - microbit.accelerometer.get_x()) < 64:
+        microbit.sleep(10)
+        pass
 
-for b in range(63, -1, -4):
-    show_image(TARDIS, b)
-    microbit.display.image.set_pixel_value(2, 0, 255)
-    microbit.sleep(500)
-    microbit.display.image.set_pixel_value(2, 0, 0)
-    microbit.sleep(500)
-    
-microbit.display.clear()
+microbit.display.set_display_mode(1)
+brightness = [ 0, 1, 3, 7, 15, 31, 63, 127, 255 ]
+materialisation = 1
+while True:
+    detect_motion()
+    for n in range(9):
+        if materialisation == 1:
+            b = brightness[n]
+        else:
+            b = brightness[8 - n]
+        show_image(TARDIS, b)
+        microbit.display.image.set_pixel_value(2, 0, 255 * (1 - materialisation))
+        microbit.sleep(500)
+        microbit.display.image.set_pixel_value(2, 0, 255 * materialisation)
+        microbit.sleep(500)
+    materialisation = 1 - materialisation
