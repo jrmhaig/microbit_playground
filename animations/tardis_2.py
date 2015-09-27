@@ -1,7 +1,6 @@
-# Touch sensitive TARDIS
+# Touch sensitive TARDIS part two
 #
-# Connect P0 and GND to the same pins on another microbit loaded with
-# tardis_2.py to see the TARDIS move from one to another
+# To be used with tardis.py
 
 import microbit
 
@@ -19,16 +18,18 @@ def show_image(img, brightness):
             microbit.display.image.set_pixel_value(i, j, img[j][i] * brightness)
 
 def detect_motion():
-    x = microbit.accelerometer.get_x()
-    while abs(x - microbit.accelerometer.get_x()) < 64:
+    x = microbit.io.P0.get_digital_value()
+    y = x
+    while x == y:
+        x = y
+        y = microbit.io.P0.get_digital_value()
         microbit.sleep(10)
 
 microbit.display.set_display_mode(1)
 brightness = [ 0, 1, 3, 7, 15, 31, 63, 127, 255 ]
-materialisation = 1
+materialisation = 0
 while True:
     detect_motion()
-    microbit.io.P0.set_digital_value(materialisation)
     for n in range(9):
         if materialisation == 1:
             b = brightness[n]
